@@ -1,7 +1,5 @@
 package com.encuesta.encuestabackend.exceptions;
 
-import java.io.ObjectInputStream.GetField;
-import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +31,7 @@ public class AppExceptionHandler{
         }
         
         ValidationErrors validationErrors = new ValidationErrors(errors, new Date());
-        
+
         return new ResponseEntity<>(validationErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 }
