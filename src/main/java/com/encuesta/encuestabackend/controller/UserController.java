@@ -1,5 +1,7 @@
 package com.encuesta.encuestabackend.controller;
 
+import javax.validation.Valid;
+
 import com.encuesta.encuestabackend.models.request.UserRegisterRequestModel;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @PostMapping()
-    public String createUser(@RequestBody UserRegisterRequestModel userModel) {        
+    public String createUser(@RequestBody @Valid UserRegisterRequestModel userModel) {        
         return "Create";
     }
     
