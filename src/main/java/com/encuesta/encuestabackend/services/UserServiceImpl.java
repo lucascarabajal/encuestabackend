@@ -7,15 +7,13 @@ import com.encuesta.encuestabackend.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
-    UserRepository userRepository;
-
-    //Constructor injecction
-    public UserServiceImpl(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository; 
 
     @Override
     public UserEntity createUser(UserRegisterRequestModel user) {
