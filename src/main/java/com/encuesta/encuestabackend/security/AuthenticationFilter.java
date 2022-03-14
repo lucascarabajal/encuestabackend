@@ -50,7 +50,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
         String email = ((User)authentication.getPrincipal()).getUsername();
 
         //Generate Token
-        String token = Jwts.builder().setSubject(email).setExpiration(new Date()).signWith(SignatureAlgorithm.HS512, "clavesecreta").compact();
+        String token = Jwts.builder().setSubject(email).setExpiration(new Date(System.currentTimeMillis()+SecurityConstants.EXPIRATION_DATE)).signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
 
         System.out.print(token);
     }
