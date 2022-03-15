@@ -1,4 +1,4 @@
-package com.encuesta;
+package com.encuesta.encuestabackend;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

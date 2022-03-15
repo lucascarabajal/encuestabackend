@@ -1,6 +1,5 @@
 package com.encuesta.encuestabackend;
 
-import com.encuesta.SpringApplicationContext;
 import com.encuesta.encuestabackend.security.AppProperties;
 
 import org.springframework.boot.SpringApplication;
