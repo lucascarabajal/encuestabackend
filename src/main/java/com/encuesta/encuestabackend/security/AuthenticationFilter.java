@@ -53,7 +53,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
         //Generate Token
         String token = Jwts.builder().setSubject(email).setExpiration(new Date(System.currentTimeMillis()+SecurityConstants.EXPIRATION_DATE)).signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
 
-        String data = new ObjectMapper().writeValueAsString(Map.of("token",token));
+        String data = new ObjectMapper().writeValueAsString(Map.of("token",SecurityConstants.TOKEN_PREFIX + token));
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().print(data);
