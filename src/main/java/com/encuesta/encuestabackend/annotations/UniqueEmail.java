@@ -14,7 +14,7 @@ import com.encuesta.encuestabackend.validators.UniqueEmailValidator;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UniqueEmail {
-    String message() default "El correo electrónico ya existe";
+    String message() default "{encuestabackend.constraints.email.unique.message}";
 
     Class<?>[] groups() default {};
     
