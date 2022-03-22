@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Map;
 
 import com.encuesta.encuestabackend.entities.UserEntity;
+import com.encuesta.encuestabackend.models.request.UserLoginRequestModel;
 import com.encuesta.encuestabackend.models.request.UserRegisterRequestModel;
 import com.encuesta.encuestabackend.models.responses.UserRest;
 import com.encuesta.encuestabackend.models.responses.ValidationErrors;
@@ -20,8 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.header.Header;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -29,6 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 public class UserControllerTest {
 
     private static final String API_URL = "/users";
+    private static final String API_LOGIN_URL= "/user/login";
 
     @Autowired
     TestRestTemplate testRestTemplate;
@@ -160,7 +167,63 @@ public class UserControllerTest {
         assertTrue(errors.containsKey("email"));
     }
 
+    @Test
+    public void getUser_sinToken_retornaForbidden(){
+        ResponseEntity<Object> response = getUser(null, new ParameterizedTypeReference<Object>(){});
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    public void getUser_conToken_retornaOK(){
+        UserRegisterRequestModel user = TestUtil.createValidUser();
+        userService.createUser(user);
+        
+        UserLoginRequestModel model = new UserLoginRequestModel();
+        model.setEmail(user.getEmail());
+        model.setPassword(user.getPassword());
+
+        ResponseEntity<Map<String,String>> responseLogin = 
+        login(model, new ParameterizedTypeReference<Map<String,String>>(){});
+
+        Map<String,String> body = responseLogin.getBody();
+        String token = body.get("token").replace("Bearer ", "");
+
+        ResponseEntity<UserRest> response = getUser(token, new ParameterizedTypeReference<UserRest>(){});
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void getUser_conToken_retornaUserRest(){
+        UserRegisterRequestModel user = TestUtil.createValidUser();
+        userService.createUser(user);
+        
+        UserLoginRequestModel model = new UserLoginRequestModel();
+        model.setEmail(user.getEmail());
+        model.setPassword(user.getPassword());
+
+        ResponseEntity<Map<String,String>> responseLogin = 
+        login(model, new ParameterizedTypeReference<Map<String,String>>(){});
+
+        Map<String,String> body = responseLogin.getBody();
+        String token = body.get("token").replace("Bearer ", "");
+
+        ResponseEntity<UserRest> response = getUser(token, new ParameterizedTypeReference<UserRest>(){});
+        assertEquals(response.getBody().getName(), user.getName());
+    }
+
     public <T> ResponseEntity<T> register(UserRegisterRequestModel data,Class<T> responseType){
         return testRestTemplate.postForEntity(API_URL, data, responseType);
+    }
+
+    public <T> ResponseEntity<T> getUser(String token, ParameterizedTypeReference<T> responseType){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Object> entity = new HttpEntity<Object>(null,headers);
+        return testRestTemplate.exchange(API_URL, HttpMethod.GET, entity, responseType);
+    }
+
+    public <T> ResponseEntity<T> login(UserLoginRequestModel data,ParameterizedTypeReference<T> responseType){
+        HttpEntity<UserLoginRequestModel> entity = new HttpEntity<UserLoginRequestModel>(data,new HttpHeaders());
+        return testRestTemplate.exchange(API_LOGIN_URL, HttpMethod.POST, entity, responseType);
     }
 }
