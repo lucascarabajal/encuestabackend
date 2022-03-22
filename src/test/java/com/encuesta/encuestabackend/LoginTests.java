@@ -48,7 +48,7 @@ public class LoginTests {
     @Test
     public void postLogin_sinCredenciales_retornaForbidden(){
         ResponseEntity<Object> response = login(null, Object.class);
-        assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class LoginTests {
         model.setPassword("password");
 
         ResponseEntity<Object> response = login(model, Object.class);
-        assertEquals(response.getStatusCode(), HttpStatus.FORBIDDEN);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class LoginTests {
         model.setPassword(user.getPassword());
 
         ResponseEntity<Object> response = login(model, Object.class);
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
