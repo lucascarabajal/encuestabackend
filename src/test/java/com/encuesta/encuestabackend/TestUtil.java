@@ -20,7 +20,7 @@ public class TestUtil {
 
         StringBuilder sb = new StringBuilder(len);
 
-        for(int i =0; i<sb.length(); i++){
+        for(int i =0; i<len; i++){
             sb.append(chars.charAt(rnd.nextInt(chars.length())));
         }
 
