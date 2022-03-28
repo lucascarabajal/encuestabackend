@@ -29,7 +29,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         http.authorizeRequests().antMatchers(HttpMethod.POST,"/users")
             .permitAll().anyRequest().authenticated();
 
-        http.addFilter(getAuthenticatFilter())
+        http.addFilter(getAuthenticationFilter())
             .addFilter(new AuthorizationFilter(authenticationManager()))
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
@@ -39,7 +39,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
 
-    public AuthenticationFilter getAuthenticatFilter() throws Exception{
+    public AuthenticationFilter getAuthenticationFilter() throws Exception{
         final AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager());
         authenticationFilter.setFilterProcessesUrl(SecurityConstants.LOGIN_URL);
         return authenticationFilter;
