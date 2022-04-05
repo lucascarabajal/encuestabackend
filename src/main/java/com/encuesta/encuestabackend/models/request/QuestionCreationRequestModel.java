@@ -8,6 +8,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.encuesta.encuestabackend.annotations.ValueOfEnum;
+import com.encuesta.enums.QuestionType;
+
 import org.hibernate.validator.constraints.Range;
 
 import lombok.Data;
@@ -22,7 +25,7 @@ public class QuestionCreationRequestModel {
     @Range(min = 1, max = 30)
     private int questionOrder;
 
-    @NotBlank
+    @ValueOfEnum(enumClass = QuestionType.class)
     private String type;
 
     @Valid
